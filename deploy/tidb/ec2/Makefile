@@ -6,4 +6,4 @@ gen_key_pair:
 	@ssh-keygen -q -N "" -t ed25519 -f ${PRIV_KEY} <<<y 2>&1 >/dev/null
 
 build: gen_key_pair
-	jsonnet -m . -J . --ext-str-file TiDBClusterPrivateKey=${PRIV_KEY} --ext-str-file TiDBClusterPublicKey=${PUB_KEY} --ext-str TiDBClusterVersion=${TIDB_CLUSTER_VERSION} main.jsonnet
+	jsonnet --ext-str-file TiDBClusterPrivateKey=${PRIV_KEY} --ext-str-file TiDBClusterPublicKey=${PUB_KEY} --ext-str TiDBClusterVersion=${TIDB_CLUSTER_VERSION} -m . main.jsonnet

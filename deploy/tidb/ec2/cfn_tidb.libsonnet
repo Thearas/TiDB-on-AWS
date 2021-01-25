@@ -167,6 +167,12 @@ local newEC2Instance(instanceType) = {
                 install_tiup: { command: "curl --proto '=https' --tlsv1.2 -sSf https://tiup-mirrors.pingcap.com/install.sh | sh" },
               },
               files: {
+                '/root/tidb.pem': {
+                  content: { Ref: 'TiDBClusterPrivateKey' },
+                  mode: '000400',
+                  owner: 'root',
+                  group: 'root',
+                },
                 '/root/deploy.yaml': {
                   content: {
                     'Fn::Sub': |||
