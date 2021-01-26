@@ -127,7 +127,7 @@ local newEC2Instance(instanceType) = {
         self + { instanceType: t },
     },
 
-    getInstanceOf(component):: std.filter(function(ins) self.Resources[ins].Type == 'AWS::EC2::Instance' && std.startsWith(ins, component), std.objectFields(self.Resources)),
+    getInstancesOf(component):: std.filter(function(ins) self.Resources[ins].Type == 'AWS::EC2::Instance' && std.startsWith(ins, component), std.objectFields(self.Resources)),
 
     withComponents(components=[]):: self + {
       Resources+: {
@@ -141,12 +141,12 @@ local newEC2Instance(instanceType) = {
           Description: 'Public Ip of %s server' % ins,
           Value: { 'Fn::GetAtt': [ins, 'PublicIp'] },
         }
-        for ins in self.getInstanceOf('TiDB')
+        for ins in self.getInstancesOf('TiDB')
       },
     },
 
     buildWithTestServer(testServerInstanceType)::
-      local hostsOf(component) = std.lines(['- host: ${%s.PublicIp}' % ins for ins in self.getInstanceOf(component)]);
+      local hostsOf(component) = std.lines(['- host: ${%s.PublicIp}' % ins for ins in self.getInstancesOf(component)]);
       local tiupComponentsConfig = std.lines([
         'pd_servers:',
         hostsOf('PD'),
